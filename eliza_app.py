@@ -2,39 +2,28 @@ import openai
 import streamlit as st
 from openai.error import AuthenticationError
 from config.config import OPENAI_PARAMS
-
-
 from components.sidebar import sidebar
 
-# Page Config
+# Page Configuration
 st.set_page_config(page_title="Eliza Chatbot", page_icon="img/eliza_logo.jpg", layout="wide")
-
-
-# Title and Logo
 logo_image = "img/eliza_logo.jpg"  
 st.image(logo_image,width=150)  
-
 project_name = "ElizaBot: A Conversational Psychotherapy Chatbot."  
 st.title(project_name)  
-
 st.markdown(
     "This mini-app replicates [Eliza's](https://dl.acm.org/doi/10.1145/365153.365168) chatbot behaviour using OpenAI's [GPTs](https://beta.openai.com/docs/models/overview)"
 )
 
+#Add sidebar
 sidebar()
 
 # Warning to make the user input their API key
-
 openai_api_key = st.session_state.get("OPENAI_API_KEY")
-
-
 if not openai_api_key:
     st.warning(
         "Enter your OpenAI API key in the sidebar. You can get a key at"
         " https://platform.openai.com/account/api-keys.", icon="⚠️"
     )
-    
-
 openai.api_key = openai_api_key
 
 if "messages" not in st.session_state:
@@ -44,7 +33,7 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-if prompt := st.chat_input("What is up?"):
+if prompt := st.chat_input("Share your feelings"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
@@ -71,7 +60,7 @@ if prompt := st.chat_input("What is up?"):
             st.session_state.messages.append({"role": "assistant", "content": full_response})
 
         except AuthenticationError as auth_error:
-            # Handle the AuthenticationError here
+            # Handle the AuthenticationError 
             st.warning(
                 "Looks like the OpenAI API key is not valid."
             )
